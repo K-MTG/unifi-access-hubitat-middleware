@@ -81,7 +81,7 @@ doors:
 Build and run the app using Docker Compose:
 
 ```sh
-docker-compose up -d
+docker compose up -d
 ```
 
 - The app listens on port `9423` by default.

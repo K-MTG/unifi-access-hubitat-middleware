@@ -1,4 +1,4 @@
-# Unifi Access Hubitat Middleware
+# Unifi Access Hubitat Middleware (UAHM)
 
 A Go application that enables Hubitat hub integration with UniFi Access Controller (UAC). 
 This middleware listens for webhooks from UAC and Hubitat, allowing you to control and monitor UAC doors from Hubitat.
@@ -44,6 +44,8 @@ Recommend using Nginx to terminate SSL (e.g Nginx Proxy Manager) and forward req
 This is optional but further secures your setup. Instructions to set this up is beyond the scope of this README.
 
 Create a `config.yaml` file in the project root.
+
+#### UAHM Configuration
 
 ```yaml
 server:

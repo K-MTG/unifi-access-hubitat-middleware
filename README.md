@@ -3,6 +3,8 @@
 A Go application that enables Hubitat hub integration with UniFi Access Controller (UAC). 
 This middleware listens for webhooks from UAC and Hubitat, allowing you to control and monitor UAC doors from Hubitat.
 
+**Hubitat Forum Post:** [https://community.hubitat.com/t/release-unifi-access-hubitat-middleware-uahm/154183](https://community.hubitat.com/t/release-unifi-access-hubitat-middleware-uahm/154183)
+
 ## Features
 
 - Provides a Lock, Contact Sensor, and Switch device type in Hubitat for each UAC door

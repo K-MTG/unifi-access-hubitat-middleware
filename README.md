@@ -43,9 +43,9 @@ This middleware listens for webhooks from UAC and Hubitat, allowing you to contr
 Recommend using Nginx to terminate SSL (e.g Nginx Proxy Manager) and forward requests to the app. 
 This is optional but further secures your setup. Instructions to set this up is beyond the scope of this README.
 
-Create a `config.yaml` file in the project root.
-
 #### UAHM Configuration
+
+Create a `config.yaml` file in the project root.
 
 ```yaml
 server:

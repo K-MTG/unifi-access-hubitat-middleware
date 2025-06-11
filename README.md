@@ -6,7 +6,7 @@ This middleware listens for webhooks from UAC and Hubitat, allowing you to contr
 ## Features
 
 - Provides a Lock, Contact Sensor, and Switch device type in Hubitat for each UAC door
-- Listens for webhooks from UniFi Access and Hubitat. Polling is exclusively used on UAC where webhooks are not currently available (for door rule status).
+- Listens for webhooks from UniFi Access and Hubitat. Polling is exclusively used on UAC where webhooks are not currently available (e.g. for door rule status).
 - Supports multiple UAC doors, each mapped to Hubitat virtual devices
 - Secure communication using a configurable auth token
 

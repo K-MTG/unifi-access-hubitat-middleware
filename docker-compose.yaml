@@ -1,0 +1,15 @@
+services:
+  unifi-access-hubitat-middleware:
+    build: .
+    container_name: unifi-access-hubitat-middleware
+    volumes:
+      - ./config.yaml:/opt/unifi-access-hubitat-middleware/config.yaml:ro
+    command: ["--config", "/opt/unifi-access-hubitat-middleware/config.yaml"]
+    ports:
+      - "9423:9423"
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"  # Limit each log file to 10MB
+        max-file: "3"    # Keep only 3 log files before rotating

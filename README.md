@@ -1,4 +1,4 @@
-# Unifi Access Hubitat Middleware (UAHM)
+# UniFi Access Hubitat Middleware (UAHM)
 
 A Go application that enables Hubitat hub integration with UniFi Access Controller (UAC). 
 This middleware listens for webhooks from UAC and Hubitat, allowing you to control and monitor UAC doors from Hubitat.

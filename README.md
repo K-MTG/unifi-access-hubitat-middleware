@@ -7,6 +7,7 @@ This middleware listens for webhooks from UAC and Hubitat, allowing you to contr
 
 - Provides a Lock, Contact Sensor, and Switch device type in Hubitat for each UAC door
 - Listens for webhooks from UniFi Access and Hubitat. Polling is exclusively used on UAC where webhooks are not currently available (e.g. for door rule status).
+  - This app creates/updates the webhook config in UniFi Access (as needed) for you. However, if you decommission the app, you will need to manually remove the webhook from UniFi Access so it doesn't continue to send webhooks to a non-existing app. (example code is in `internal/uac/client.go`)
 - Supports multiple UAC doors, each mapped to Hubitat virtual devices
 - Secure communication using a configurable auth token
 
@@ -37,6 +38,17 @@ This middleware listens for webhooks from UAC and Hubitat, allowing you to contr
    - Name: "unifi-access-hubitat-middleware" (or any name you prefer)
    - Permissions: Enable "Edit" for "Locations" and "Webhooks". All other permissions can be left as "None".
 4. Note the API Key and URL, which should look like `https://your-uac-ip:12445`.
+5. Execute the following `curl` command to list your UAC doors and retrieve their IDs:
+
+   ```sh
+   curl -X GET '{{host}}/api/v1/developer/doors' \
+     -H 'Authorization: Bearer wHFmHR******kD6wHg' \
+     -H 'accept: application/json' \
+     -H 'content-type: application/json' \
+     --insecure
+    ```
+   Substitute `{{host}}` with your UAC URL and `wHFmHR******kD6wHg` with your API key. This will return a JSON response containing your UAC doors.
+   Use the "id" field from the door object as the uac_id in your config file.
 
 
 #### Nginx Proxy (Optional)
@@ -85,5 +97,6 @@ docker compose up -d
 ```
 
 - The app listens on port `9423` by default.
+
 
 

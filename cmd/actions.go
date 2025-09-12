@@ -23,7 +23,7 @@ func assertUacWebhookExists() (*uac.Webhook, error) {
 	newWebhook := uac.Webhook{
 		Name:     "unifi-access-hubitat-middleware",
 		Endpoint: fmt.Sprintf("%s/webhook/uac", appConfig.Server.BaseURL),
-		Events:   []string{"access.device.dps_status", "access.door.unlock"},
+		Events:   []string{"access.device.dps_status", "access.door.unlock"}, // todo "access.temporary_unlock.start", "access.temporary_unlock.end"},
 		Headers: map[string]string{
 			"Authorization": appConfig.Server.AuthToken,
 		},
@@ -65,6 +65,10 @@ func handleUacEvent(evt uac.WebhookEvent) {
 			Location struct {
 				ID string `json:"id"`
 			} `json:"location"`
+			Actor struct {
+				Name string `json:"name"`
+				Type string `json:"type"`
+			} `json:"actor"`
 			Object struct {
 				Result string `json:"result"`
 			} `json:"object"`
@@ -73,7 +77,10 @@ func handleUacEvent(evt uac.WebhookEvent) {
 			logger.Error("Failed to unmarshal event data", slog.String("err", err.Error()))
 			return
 		}
-		// assert payload.result == "Access Granted"
+		if payload.Actor.Type == "open-api" && payload.Actor.Name == "unifi-access-hubitat-middleware" {
+			logger.Info("Door unlock event triggered by API, ignoring", slog.Any("event", evt))
+			return
+		}
 		if payload.Object.Result != "Access Granted" {
 			logger.Info("Door unlock event not granted, ignoring", slog.Any("event", evt))
 			return
@@ -85,6 +92,8 @@ func handleUacEvent(evt uac.WebhookEvent) {
 			return
 		}
 
+		// sleep for 200 milliseconds to allow the door lock to actually unlock
+		time.Sleep(200 * time.Millisecond)
 		err := hubitatClient.AssertDoorSwitchOn(door.HubitatSwitchID)
 		if err != nil {
 			logger.Error("Failed to assert door switch on in Hubitat",
@@ -135,9 +144,12 @@ func handleUacEvent(evt uac.WebhookEvent) {
 				slog.String("hubitat_contact_id", door.HubitatContactID))
 			return
 		}
+	// todo implement temporary unlock events
+	//case "access.temporary_unlock.start":
+	//case "access.temporary_unlock.end":
 
 	default:
-		logger.Error("Unknown event", slog.String("event", evt.Event))
+		logger.Error("Unknown Uac event", slog.Any("event", evt))
 	}
 }
 
@@ -166,8 +178,10 @@ func handleHubitatEvent(evt hubitat.WebhookEvent) {
 			logger.Error("Unknown lock value", slog.Any("event", evt))
 			return
 		}
+	case "contact":
+		// no action needed for contact sensor events
 	default:
-		logger.Warn("Unknown event", slog.Any("event", evt))
+		logger.Warn("Unknown Hubitat event", slog.Any("event", evt))
 	}
 
 	if err != nil {
@@ -211,6 +225,7 @@ func pollUacStates(ctx context.Context, wg *sync.WaitGroup) {
 
 	// poll door rule every 5 seconds and update hubitat lock when status changes.
 	// This is temporary until below data is included in the webhook
+	// todo remove below once door rule status is included in webhook
 	doorLockRuleStates := make(map[string]string)
 
 	ticker := time.NewTicker(5 * time.Second)

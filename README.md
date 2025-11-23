@@ -7,7 +7,7 @@ This middleware listens for webhooks from UAC and Hubitat, allowing you to contr
 
 ## Features
 
-- Provides a Lock, Contact Sensor, and Switch device type in Hubitat for each UAC door
+- Provides a Lock (optional), Contact Sensor, and Switch device type in Hubitat for each UAC door
 - Listens for webhooks from UniFi Access and Hubitat. Polling is exclusively used on UAC where webhooks are not currently available (e.g. for door rule status).
   - This app creates/updates the webhook config in UniFi Access (as needed) for you. However, if you decommission the app, you will need to manually remove the webhook from UniFi Access so it doesn't continue to send webhooks to a non-existing app. (example code is in `internal/uac/client.go`)
 - Supports multiple UAC doors, each mapped to Hubitat virtual devices
@@ -19,7 +19,7 @@ This middleware listens for webhooks from UAC and Hubitat, allowing you to contr
 
 #### Create Virtual Devices
 1. Go to **Devices** > **Add device** > **Virtual**.
-    - Create a **Virtual Lock**, **Virtual Contact**, and **Virtual Switch** for each UAC door.
+    - Create a **Virtual Lock** (optional), **Virtual Contact**, and **Virtual Switch** for each UAC door.
     - For the **Virtual Switch**, go to **Preferences** and enable auto off with a 10 second delay.
 
 #### Enable Maker API
@@ -77,7 +77,7 @@ hubitat:
 doors:
   - uac_id: "uac-door-id-1"
     hubitat_contact_id: "contact-device-id"
-    hubitat_lock_id: "lock-device-id"
+    hubitat_lock_id: "lock-device-id"   # this is optional
     hubitat_switch_id: "switch-device-id"
   # Add more doors as needed
 ```

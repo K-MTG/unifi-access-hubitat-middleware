@@ -38,7 +38,7 @@ func getDoorByHubitatID(hubitatID string) (door *config.Door, deviceType string,
 		if d.HubitatContactID == hubitatID {
 			return &appConfig.Doors[i], "contact", true
 		}
-		if d.HubitatLockID == hubitatID {
+		if d.HubitatLockID != nil && *d.HubitatLockID == hubitatID {
 			return &appConfig.Doors[i], "lock", true
 		}
 		if d.HubitatSwitchID == hubitatID {

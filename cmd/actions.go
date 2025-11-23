@@ -237,6 +237,10 @@ func pollUacStates(ctx context.Context, wg *sync.WaitGroup) {
 			return
 		case <-ticker.C:
 			for _, door := range appConfig.Doors {
+				if door.HubitatLockID == nil {
+					// no lock associated with this door
+					continue
+				}
 				rule, err := uacClient.GetDoorLockRule(door.UacID)
 				if err != nil {
 					logger.Error("Failed to get door lock rule", slog.String("door_id", door.UacID),
@@ -258,11 +262,11 @@ func pollUacStates(ctx context.Context, wg *sync.WaitGroup) {
 				prevState := doorLockRuleStates[door.UacID]
 				if currDoorLockRuleState != prevState {
 					if currDoorLockRuleState == "locked" {
-						if err := hubitatClient.AssertDoorLockLocked(door.HubitatLockID); err != nil {
+						if err := hubitatClient.AssertDoorLockLocked(*door.HubitatLockID); err != nil {
 							logger.Error("Failed to assert door lock locked", slog.String("door_id", door.UacID), slog.String("err", err.Error()))
 						}
 					} else if currDoorLockRuleState == "unlocked" {
-						if err := hubitatClient.AssertDoorLockUnlocked(door.HubitatLockID); err != nil {
+						if err := hubitatClient.AssertDoorLockUnlocked(*door.HubitatLockID); err != nil {
 							logger.Error("Failed to assert door lock unlocked", slog.String("door_id", door.UacID), slog.String("err", err.Error()))
 						}
 					}

@@ -29,10 +29,10 @@ type Hubitat struct {
 }
 
 type Door struct {
-	UacID            string `yaml:"uac_id"`
-	HubitatContactID string `yaml:"hubitat_contact_id"`
-	HubitatLockID    string `yaml:"hubitat_lock_id"`
-	HubitatSwitchID  string `yaml:"hubitat_switch_id"`
+	UacID            string  `yaml:"uac_id"`
+	HubitatContactID string  `yaml:"hubitat_contact_id"`
+	HubitatLockID    *string `yaml:"hubitat_lock_id,omitempty"`
+	HubitatSwitchID  string  `yaml:"hubitat_switch_id"`
 }
 
 func LoadConfig(configPath string) (*Config, error) {
